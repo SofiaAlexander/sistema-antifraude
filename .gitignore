@@ -1,0 +1,25 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+.env
+*.env
+
+# Node / React (frontend)
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Editor
+.vscode/*
+.idea
+.DS_Store
+
+# Logs
+*.log
+
+prueba_conversacion.txt
