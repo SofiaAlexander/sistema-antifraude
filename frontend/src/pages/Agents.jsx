@@ -5,6 +5,7 @@ export default function Agents() {
   const [agents, setAgents] = useState([])
   const [form, setForm] = useState({ nombre: '', codigo: '', email: '', area: '', nombre_leadsales: '', autorizado_cobros: false })
   const [editando, setEditando] = useState(null)
+  const [confirmarEliminar, setConfirmarEliminar] = useState(null)
   const [loading, setLoading] = useState(false)
   const [mensaje, setMensaje] = useState('')
 
@@ -63,6 +64,17 @@ export default function Agents() {
   const toggleCobros = async (agent) => {
     await API.put(`/agents/${agent.id}`, { autorizado_cobros: !agent.autorizado_cobros })
     cargar()
+  }
+
+  const handleEliminar = async (id) => {
+    try {
+      await API.delete(`/agents/${id}`)
+      mostrarMensaje('Agente eliminado correctamente')
+      setConfirmarEliminar(null)
+      cargar()
+    } catch {
+      mostrarMensaje('Error al eliminar el agente')
+    }
   }
 
   return (
@@ -162,6 +174,22 @@ export default function Agents() {
                     </button>
                   </div>
                 </div>
+              ) : confirmarEliminar === a.id ? (
+                <div className="px-5 py-4 bg-red-50">
+                  <p className="text-sm font-medium text-red-700 mb-3">
+                    ¿Eliminar permanentemente a <strong>{a.nombre}</strong>? Esta acción no se puede deshacer.
+                  </p>
+                  <div className="flex gap-2">
+                    <button onClick={() => handleEliminar(a.id)}
+                      className="bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-red-700 transition">
+                      Sí, eliminar
+                    </button>
+                    <button onClick={() => setConfirmarEliminar(null)}
+                      className="bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg text-xs hover:bg-gray-200 transition">
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
               ) : (
                 <div className="px-5 py-4 flex items-center justify-between hover:bg-gray-50 transition">
                   <div className="flex items-center gap-4">
@@ -198,6 +226,10 @@ export default function Agents() {
                     <button onClick={() => setEditando({...a})}
                       className="text-xs px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition">
                       Editar
+                    </button>
+                    <button onClick={() => setConfirmarEliminar(a.id)}
+                      className="text-xs px-3 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition">
+                      Eliminar
                     </button>
                   </div>
                 </div>

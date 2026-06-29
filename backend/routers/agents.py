@@ -90,6 +90,6 @@ def delete_agent(agent_id: int, db: Session = Depends(get_db)):
     agent = db.query(Agent).filter(Agent.id == agent_id).first()
     if not agent:
         raise HTTPException(status_code=404, detail="Agente no encontrado")
-    agent.activo = False
+    db.delete(agent)
     db.commit()
-    return {"mensaje": "Agente desactivado correctamente"}
+    return {"mensaje": "Agente eliminado correctamente"}
